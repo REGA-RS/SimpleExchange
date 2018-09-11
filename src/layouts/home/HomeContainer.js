@@ -6,11 +6,10 @@ import PropTypes from 'prop-types'
 const mapStateToProps = state => {
   return {
     accounts: state.accounts,
-    LCSToken: state.contracts.LCSToken,
+    SimpleExchange: state.contracts.SimpleExchange,
     RSTToken: state.contracts.RSTToken,
     ERC20Adapter: state.contracts.ERC20Adapter,
-    TokenContainer: state.contracts.TokenContainer,
-    TokenPool: state.contracts.TokenPool,
+    ERC721SmartToken: state.contracts.ERC721SmartToken,
     drizzleStatus: state.drizzleStatus
   }
 }

@@ -1,6 +1,7 @@
 pragma solidity ^0.4.18;
 
 contract IERC721SmartToken {
+    mapping (uint256 => address) public tokenIndexToOwner;
     function getNFT(uint256 _id) public view returns (uint256 value, string metadata, uint256 kind, uint256 level, uint256 state);
     function createNFT(uint256 _value, string  _metadata, uint256 _kind, address _owner) public returns (uint);
     function setNFT(uint256 _id, uint256 value, string metadata, uint256 kind, uint256 level, uint256 state) public;

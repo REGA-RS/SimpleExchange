@@ -1,7 +1,6 @@
 import { drizzleConnect } from 'drizzle-react';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import axios from 'axios';
 
 /*
  * Create component.
@@ -20,20 +19,7 @@ class ContractFormExtension extends Component {
     const abi = this.contracts[this.props.contract].abi;
 
     this.inputs = [];
-    this.extension = {};
-    this.error_msg = '';
     var initialState = {};
-
-    this.dataKey = this.contracts['LCSToken'].methods['getHash'].cacheCall(...[]);
-
-    // Iterate over abi for correct function.
-    for (var k = 0; k < abi.length; k++) {
-        if (abi[k].name === 'getBizProcessId') {
-            this.fnABI = abi[k];
-  
-            break;
-        }
-    }
 
     // Iterate over abi for correct function.
     for (var i = 0; i < abi.length; i++) {
@@ -48,52 +34,20 @@ class ContractFormExtension extends Component {
         }
     }
 
+    initialState["value"] = '';
+
     this.state = initialState;
   }
 
-  checkFileExists(url) {
-    axios.get(url).then((response) => {
-        console.log(url);
-        return url;
-      }).catch(function (error) {
-        console.log(error);
-        return ``;
-      });
-  }
-
-  emitEvent(url) {
-    axios.post(url).then((response) => {
-        console.log(url);
-        return url;
-      }).catch(function (error) {
-        console.log(error);
-        return ``;
-      });
-  }
 
   handleSubmit() {
-    
-    if(this.props.emitEvent) {
-        this.contracts[this.props.contract].methods[this.props.method].cacheSend(...[]);
-        var eventUrl = `https://rega.life/lexi/luggage/${this.props.emitEvent}`;
-        return this.emitEvent(eventUrl);
-    }
 
-    var name = this.state['Name'];
-    var surname = this.state['Surname'];
-    var hash = this.context.drizzle.web3.utils.sha3(name.concat(surname));
-    var displayData = this.props.contracts['LCSToken']['getHash'][this.dataKey].value;
-    if(this.props.check) {
-        if(hash === displayData) {
-            this.contracts[this.props.contract].methods[this.props.method].cacheSend(...[]);
-        }
-        else {
-            this.error_msg = hash;
-        }
-    }
-    else {
-        this.contracts[this.props.contract].methods[this.props.method].cacheSend(...[hash]);
-    }
+    var sendArgs = { value: this.state['value'] };
+
+    var sendObject = Object.assign({}, this.state);
+    delete sendObject['value'];
+
+    return this.contracts[this.props.contract].methods[this.props.method].cacheSend(...Object.values(sendObject), sendArgs);
   }
 
   handleInputChange(event) {
@@ -117,44 +71,15 @@ class ContractFormExtension extends Component {
   }
 
   render() {
-    if(!this.props.contracts['LCSToken'].initialized) {
-        return (
-          <span>Initializing...</span>
-        )
-      }
-  
-      // If the cache key we received earlier isn't in the store yet; the initial value is still being fetched.
-      if(!(this.dataKey in this.props.contracts['LCSToken']['getHash'])) {
-        return (
-          <span>Fetching...</span>
-        )
-      }
-  
-    var displayData = this.props.contracts['LCSToken']['getHash'][this.dataKey].value;
-    // var imgUrl = `/files/${displayData}`;
-    var imgUrl = `https://rega.life/lexi/luggage/${displayData}.`;
-    var imgUrl01 = `https://rega.life/lexi/luggage/${displayData}-1.`;
-    var imgUrl02 = `https://rega.life/lexi/luggage/${displayData}-2.`;
-    
     return (
       <form className="pure-form pure-form-stacked">
-        {this.props.check &&
-            <div>
-                <h3>Claim docs</h3>
-                <img alt="vote-img" src={imgUrl} />
-                <img alt="vote-img01" src={imgUrl01} />
-                <img alt="vote-img02" src={imgUrl02} />
-            </div>
-        }
-        {this.error_msg.length > 0 &&
-            <h3>
-                ERROR: the hash does not match 
-            </h3>
-        }
-        <p>{this.error_msg}</p>
-        {this.props.extension.map((input, index) => {
-            return (<input key={input.name} type={input.type} name={input.name} value={this.state[input.name]} placeholder={input.name} onChange={this.handleInputChange} />)
+        {this.inputs.map((input, index) => {            
+            var inputType = this.translateType(input.type)
+            var inputLabel = this.props.labels ? this.props.labels[index] : input.name
+            // check if input type is struct and if so loop out struct fields as well
+            return (<input key={input.name} type={inputType} name={input.name} value={this.state[input.name]} placeholder={inputLabel} onChange={this.handleInputChange} />)
         })}
+        <input key="value" type="number" name="value" value={this.state["value"]} placeholder="Value" onChange={this.handleInputChange} />
         <button key="submit" className="pure-button" type="button" onClick={this.handleSubmit}>Submit</button>
       </form>
     )
