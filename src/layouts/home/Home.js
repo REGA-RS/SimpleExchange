@@ -147,7 +147,7 @@ class Home extends Component {
         </TabPanel>
 
         <TabPanel>
-          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["1","12","13"]} uncheck>
+          <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["1","12","13"]}>
             <h2>Approve</h2>
             <p>Before place the order the new member need to approve token transfer from own account to SimpleExchange smart contract address. The amount to approve is amount in RST</p>
             <h3>Current Account RST Balance</h3>
