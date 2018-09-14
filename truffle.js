@@ -1,5 +1,5 @@
 var HDWalletProvider = require("truffle-hdwallet-provider");
-var mnemonic = "first mix any adult deal sand brand about window will casual second";
+var mnemonic = "plate mix any adult deal sand brand about window will casual grit";
 
 module.exports = {
   migrations_directory: "./migrations",
@@ -13,7 +13,8 @@ module.exports = {
       provider: function() {
         return new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/fyE6fpwJWFc6fBYSet1w");
       },
-      network_id: 4
+      network_id: 4,
+      gasPrice: 26000000000
     },
     ropsten: {
       provider: function() {
