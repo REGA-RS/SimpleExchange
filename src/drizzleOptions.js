@@ -18,6 +18,8 @@ const drizzleOptions = {
     ERC721SmartToken
   ],
   events: {
+    RSTToken:['Transfer','Approval'],
+    SimpleExchange:['Place','Cancel','Buy','Payment']
   },
   polls: {
     accounts: 1500

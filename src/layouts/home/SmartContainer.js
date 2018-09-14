@@ -21,6 +21,8 @@ class SmartContainer extends Component {
 
     this.dataKey = this.contracts['SimpleExchange'].methods['getBizProcessId'].cacheCall(...[]);
 
+    this.dataKeyCheck = this.contracts['SimpleExchange'].methods['checkOrder'].cacheCall(...[]);
+
     // Iterate over abi for correct function.
     for (var i = 0; i < abi.length; i++) {
       if (abi[i].name === 'getBizProcessId') {
@@ -65,9 +67,30 @@ class SmartContainer extends Component {
       )
     }
 
+    if(!(this.dataKeyCheck in this.props.contracts['SimpleExchange']['checkOrder'])) {
+      return (
+        <span>Fetching...</span>
+      )
+    }
+
     var displayData = this.props.contracts['SimpleExchange']['getBizProcessId'][this.dataKey].value
     var contractOwner = displayData['contractOwner'];
     var bizProcessId = displayData['bizProcessId'];
+
+    var check = this.props.contracts['SimpleExchange']['checkOrder'][this.dataKeyCheck].value;
+
+    if(this.props.check || this.props.uncheck) {
+      if(check !== '11111111') {
+        return(
+          null
+        )
+      }
+      else if(this.props.uncheck) {
+        return(
+          null
+        )
+      }
+    }
 
     if(this.account === contractOwner && this.props.ownerOnly) {
       if(bizProcessId ==='100') {
