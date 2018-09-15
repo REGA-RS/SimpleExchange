@@ -79,16 +79,35 @@ class SmartContainer extends Component {
 
     var check = this.props.contracts['SimpleExchange']['checkOrder'][this.dataKeyCheck].value;
 
-    if(this.props.check || this.props.uncheck) {
+    if(this.props.check) {
       if(check !== '11111111') {
         return(
           null
         )
       }
-      else if(this.props.uncheck) {
+    }
+
+    if(this.props.uncheck) {
+      if(check === '11111111') {
         return(
           null
         )
+      }
+    }
+
+    if(this.props.nothingToSell) {
+      if(this.props.nothingToSell === true) {
+      return(
+        <h2>You don't have any RST tokens to sell</h2>
+      )
+      }
+    }
+
+    if(this.props.nothingToBuy) {
+      if(this.props.nothingToBuy === true) {
+      return(
+        <h2>There is no any RST tokens to buy</h2>
+      )
       }
     }
 
@@ -118,9 +137,17 @@ class SmartContainer extends Component {
       if(this.props.bizProcessId) {
         // if(this.props.bizProcessId === bizProcessId) {
         if(this.CheckBizProcess(bizProcessId)) {
+
+          if(this.props.hide) {
+            if(bizProcessId === this.props.hide) {
+              return (
+                null
+              )
+            }
+          }
           
           return(
-            <div className="pure-u-1-1"><h2>Member <small>[{bizProcessId}]</small></h2>{this.props.children}</div>
+            <div className="pure-u-1-1">{this.props.children}</div>
           )
         }
         else {

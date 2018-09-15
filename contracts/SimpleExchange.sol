@@ -102,7 +102,6 @@ contract SimpleExchange is Utils, Owned() {
         uint256 _decimals = uint256(RST.decimals());
         uint _value = safeMul(_rate, amount);
         if (_decimals > uint8(0)) {                   // ... check if RST decimals is not 0
-            _decimals--;
             _value = _value / (10 ** _decimals);      // ... and use decimals to convert RST to ETH
         }
         uint _id = erc721.createNFT(_value, "Order", uint(1), msg.sender);
@@ -126,7 +125,6 @@ contract SimpleExchange is Utils, Owned() {
         if(amount > 0) check = check + 100000;
         uint _value = safeMul(_rate, amount);
         if (_decimals > uint8(0)) {                   // ... check if RST decimals is not 0
-            _decimals--;
             _value = _value / (10 ** _decimals);      // ... and use decimals to convert RST to ETH
         }
         if(_decimals > 0) check = check + 1000000;
@@ -207,6 +205,33 @@ contract SimpleExchange is Utils, Owned() {
         erc721.setNFTState(_id, uint256(Status.Executed));
 
         emit Buy(_id, _allowance, _value);
+    }
+
+    function buyOrderCheck(uint _id) public view returns (uint check) {
+        check = 0;
+
+        if(_id != uint256(0)) {
+            check = check + 1;
+        }
+        if(erc721.getNFTState(_id) == uint256(Status.Active)) {
+            check = check + 10;
+        }
+        if (RST != address(0)) {
+            check = check + 100;
+        }
+        address _owner = erc721.tokenIndexToOwner(_id);
+        if(_owner != address(0)) {
+            check = check + 1000;
+        }
+        uint _allowance = RST.allowance(_owner, address(this));
+        if(_allowance == amount) {
+            check = check + 10000;
+        }
+        uint _value = erc721.getNFTValue(_id);
+        if(_value != uint256(0)) {
+            check = check + 100000;
+        }
+
     }
 
     /// payment 
