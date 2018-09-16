@@ -95,6 +95,7 @@ class Home extends Component {
 
     return(
       <table>
+        <tbody>
               <tr>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -138,7 +139,7 @@ class Home extends Component {
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 <td>{average} Ether</td>
               </tr>
-            
+              </tbody>
             </table>
     )
   }
@@ -336,7 +337,6 @@ class Home extends Component {
     var contractOwner = displayData['contractOwner'];
 
     var itisOwner = contractOwner === this.props.accounts[0];
-    var hasOrders = parseInt(bizProcessId,10) >= 10;
 
     var dealData = this.props['SimpleExchange']['findDeal'][this.dealKey].value;
     var balanceData = this.props['RSTToken']['balanceOf'][this.balanceKey].value;
@@ -415,6 +415,7 @@ class Home extends Component {
           <SmartContainer accountIndex="0" notOwnerOnly bizProcessId={["2","12","13"]} check>
           <h2>Order Info</h2>
             <table>
+              <tbody>
               <tr>
                 <td>XRST Balance</td>
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
@@ -450,6 +451,7 @@ class Home extends Component {
                 <td>&nbsp;&nbsp;&nbsp;&nbsp;</td>
                 <td><ContractData contract="SimpleExchange" method="checkOrder" /></td>
               </tr>
+              </tbody>
             </table>
             
             <h2>Place Order</h2>
